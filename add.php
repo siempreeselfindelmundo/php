@@ -1,4 +1,9 @@
 <?php
+
+    //connecting to dbk
+    include('config/db_connection.php');
+
+
     // if(isset($_GET['submit'])) {
     //     echo $_GET['email'];
     //     echo $_GET['title'];
@@ -46,15 +51,36 @@
         } else {
             $ingredients = $_POST['ingredients'];
             if(!preg_match('/^([a-zA-Z\s]+)(,\s*[a-zA-Z\s]*)*$/', $ingredients)){
-                $errors['ingredients'] = 'Ingredientes must be a comma separated list';
+                $errors['ingredients'] = 'Ingredients must be a comma separated list';
             }
         }
 
         if(array_filter($errors)) {
             //echo 'errors in the form'; // returns true
         } else {
-            header('Location: index.php'); // method to redirect to another file.
-            //echo 'form is valid'; // returns false
+
+            // function to avoid any malicious code on the database, a bit like htmlspecialchars,
+            // we override the values in the vars.
+            //the function takes 2 parameters: 1. the connection. 2- the value we want to store in the database
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $title = mysqli_real_escape_string($conn, $_POST['title']);
+            $ingredients = mysqli_real_escape_string($conn, $_POST['ingredients']);
+
+            // create sql: insert into -table name-(columns), values()
+
+            $sql = "INSERT INTO pizzas(title, email, ingredients) VALUES('$title', '$email', '$ingredients')";
+
+            // save to db and check
+            if(mysqli_query($conn, $sql)){
+                //success
+                header('Location: index.php'); // method to redirect to another file.
+
+            } else {
+                // error
+                echo 'query error: ' . mysqli_error($conn); 
+            }
+
+        
         }
         
         // the array_filter method goes through an array and it performs a callback function on each item. by default the function it runs is checking if there are any values on the key of an associative array. so if a key is empty it will return 'false' but if there are any errors it will return 'true'

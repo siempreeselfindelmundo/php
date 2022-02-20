@@ -1,16 +1,6 @@
 <?php
 
-    // connecting to database
-
-    //storing the connection reference in a variable
-    $conn = mysqli_connect('localhost', 'Loreto', 'test1234', 'ninja_pizza'); 
-    //mysqli_connect is a function that takes 4 parameters: 1- host. 2- username. 3- password. 4- database name.
-    //it connects to the whole database, not just one table.
-
-    //checking connection: 
-    if(!$conn){
-        echo 'Connection error: ' . mysqli_connect_error();
-    }
+    include('config/db_connection.php');
 
     // retrieving data from database
 
@@ -35,7 +25,7 @@
     // close connection to database
     mysqli_close($conn);
 
-    // explode function: turn a string into an array. takes 2 parameters: 1. the character we want to search for and 2. the string we want to convert.
+    // explode function: turns a string into an array. takes 2 parameters: 1. the character we want to search for and 2. the string we want to convert.
     //print_r(explode(',', $pizzas[0]['ingredients'])); // $array[position][key of that assoc array]
 
 ?>
